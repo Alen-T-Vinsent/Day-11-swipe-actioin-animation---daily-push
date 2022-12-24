@@ -21,7 +21,7 @@ struct Home: View {
                     if index == 0{
                         colors[index]
                             .overlay(
-                            //geometry Reader for getting offset....
+                                //geometry Reader for getting offset....
                                 GeometryReader{proxy -> Color in
                                     
                                     let minX = proxy.frame(in: .global).minX
@@ -45,7 +45,7 @@ struct Home: View {
                 
                 
                 
-     
+                
                 
                 
             }
@@ -56,22 +56,58 @@ struct Home: View {
                     
                     ForEach(colors.indices,id:\.self){index in
                         
-                       
+                        
                         
                         Capsule()
                             .fill(Color.white)
-                            .frame(width: 7,height: 7)
+                            .frame(width: getIndex() == index  ? 20 : 7 ,height: 7)
+                        
                         
                     }
-                  
-                }
                     
+                }
+                //showing smooth effect
+                    .overlay(
+                        Capsule()
+                            .fill(Color.white)
+                            .frame(width:  20,height: 7)
+                            .offset(x:getOffset())
+                        ,alignment: .leading
+                        
+                    )
+                    .padding(.bottom,UIApplication.shared.windows.first?.safeAreaInsets.bottom)
+                    .padding(.bottom,10)
+                ,alignment: .bottom
+                
             )
         }
         .ignoresSafeArea()
     }
+    
+    func getIndex()->Int{
+        let index = Int(round(Double(offset/getWidth())))
+        return index
+    }
+    
+    func getOffset()->CGFloat{
+        //spacing = 15
+        // Circle width = 7
+        //so total = 22
         
-        
+        let progress = offset/getWidth()
+        return 22 * progress
+    }
+    
+}
+
+
+
+
+//exttending view to get width
+extension View{
+    func getWidth()->CGFloat{
+        return UIScreen.main.bounds.width
+    }
 }
 
 struct Home_Previews: PreviewProvider {
